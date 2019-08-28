@@ -1,0 +1,21 @@
+{
+  "name": "pong",
+  "version": "1.0.0",
+  "description": "Ping-pong game",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc",
+    "start:gulp": "gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^16.5.0",
+    "gulp": "^4.0.0",
+    "gulp-typescript": "^5.0.1",
+    "tsify": "^4.0.1",
+    "typescript": "~3.5.3",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1"
+  }
+}
