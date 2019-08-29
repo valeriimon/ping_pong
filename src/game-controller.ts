@@ -1,14 +1,6 @@
-import { GameControllerEntity } from "./interfaces";
+import { GameControllerEntity, GameControllerSettings } from "./interfaces";
 
-interface GameControllerSettings {
-  ctx: CanvasRenderingContext2D,
-  posX: number,
-  width: number,
-  height: number,
-  upKey: number,
-  downKey: number,
-  collisionFn: (ballX: number, ballY: number) => boolean
-}
+
 
 export class GameController {
   posY: number = 0;
@@ -16,14 +8,15 @@ export class GameController {
   width: number;
   height: number;
   ctx: CanvasRenderingContext2D;
-  collisionFn: (ballX: number, ballY: number) => boolean
+  collisionFn: (ballX: number, ballY: number, ballRadius: number) => boolean
   constructor(public settings: GameControllerSettings) {
-    this.render();
     this.width = settings.width;
     this.height = settings.height;
     this.ctx = settings.ctx;
     this.posX = settings.posX;
+    this.posY = settings.gameTopBorder;
     this.collisionFn = settings.collisionFn.bind(this);
+    this.render();
   }
 
   get topBorder() {
@@ -36,11 +29,6 @@ export class GameController {
 
   get sideBorder() {
     return this.posX === 0 ? this.width : this.posX
-  }
-
-  render() {
-    this.settings.ctx.fillStyle = "#fff";
-    this.settings.ctx.fillRect(this.posX, this.posY, this.width, this.height);
   }
 
   update(options: Partial<GameControllerEntity>) {
@@ -58,8 +46,22 @@ export class GameController {
       posY = this.posY + 15;
     }
 
-    if(this.bottomBorder <= this.ctx.canvas.height && this.topBorder >= 0 ) {
+    const updatedTopBorder = posY;
+    const updatedBottomBorder = posY + this.height;
+    const canUpdate = updatedBottomBorder <= this.settings.gameBottomBorder && updatedTopBorder >= this.settings.gameTopBorder;
+    
+    if(canUpdate) {
       this.update({posY});
     }
+  }
+
+  reset() {
+    this.posY = this.settings.gameTopBorder;
+    this.render();
+  }
+
+  render() {
+    this.settings.ctx.fillStyle = this.settings.bgColor;
+    this.settings.ctx.fillRect(this.posX, this.posY, this.width, this.height);
   }
 }
